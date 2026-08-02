@@ -11,7 +11,7 @@ WEB_ORIGIN = "http://localhost:3000"
 # Placeholder bindings — replace IDs after provisioning Cloudflare resources.
 [[hyperdrive]]
 binding = "HYPERDRIVE"
-id = "00000000000000000000000000000000"
+id = "523981c7e71c48cda689a56cf3fb783a"
 localConnectionString = "postgres://user:pass@localhost:5432/rag_blog"
 
 [[r2_buckets]]
@@ -21,8 +21,8 @@ preview_bucket_name = "rag-blog-images-preview"
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "00000000000000000000000000000000"
-preview_id = "00000000000000000000000000000000"
+id = "c83f61e2a5144a8c83b680d4bca32e1a"
+preview_id = "d9a974e2452d4778bcbb0c80a7b9ccb5"
 
 [[queues.producers]]
 binding = "RAG_INDEX_QUEUE"

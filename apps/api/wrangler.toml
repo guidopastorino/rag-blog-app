@@ -1,0 +1,37 @@
+name = "rag-blog-api"
+main = "src/index.ts"
+compatibility_date = "2025-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+APP_URL = "http://localhost:3000"
+API_URL = "http://localhost:8787"
+WEB_ORIGIN = "http://localhost:3000"
+
+# Placeholder bindings — replace IDs after provisioning Cloudflare resources.
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "00000000000000000000000000000000"
+localConnectionString = "postgres://user:pass@localhost:5432/rag_blog"
+
+[[r2_buckets]]
+binding = "BLOG_IMAGES"
+bucket_name = "rag-blog-images"
+preview_bucket_name = "rag-blog-images-preview"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "00000000000000000000000000000000"
+preview_id = "00000000000000000000000000000000"
+
+[[queues.producers]]
+binding = "RAG_INDEX_QUEUE"
+queue = "rag-index-queue"
+
+[[queues.consumers]]
+queue = "rag-index-queue"
+max_batch_size = 5
+max_retries = 3
+
+[ai]
+binding = "AI"

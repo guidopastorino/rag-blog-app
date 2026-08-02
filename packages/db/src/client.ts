@@ -1,0 +1,14 @@
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import * as schema from "./schema";
+
+export type Database = ReturnType<typeof createDb>;
+
+/** Create a Drizzle client. Pass Hyperdrive connection string on Workers. */
+export function createDb(connectionString: string) {
+	const client = postgres(connectionString, {
+		prepare: false,
+		max: 5,
+	});
+	return drizzle(client, { schema });
+}

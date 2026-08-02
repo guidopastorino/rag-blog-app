@@ -1,0 +1,71 @@
+schema: spec-driven
+
+# Injected into artifact instructions (proposal/specs/design/tasks) and apply/archive.
+# Constraints for the AI — not copied verbatim into artifact files.
+context: |
+  Domain: RAG blog app — users auth, create blog posts, like/share/comment, and ask per-post questions via RAG.
+
+  Product defaults (v1):
+  - Posts are public (readable without auth)
+  - Mutations (create/update/delete posts, engagement) require auth
+  - RAG Q&A allowed for any client but rate-limited (KV)
+  - No OAuth/social login, email verification, multi-tenant orgs, or admin moderation in v1
+
+  Tech stack (required):
+  - Package manager: pnpm workspaces monorepo (apps/ and packages/)
+  - Frontend: Next.js App Router + Tailwind + Biome + Shadcn + React Query → Cloudflare Pages
+  - Backend: Hono + Cloudflare Workers with nodejs_compat enabled
+  - Auth: Better-Auth + username plugin (email/username + password); Workers-safe lightweight password hasher (must not crash Workers)
+  - Validation: Zod shared via packages/types
+  - Database: Neon Postgres + pgvector + Cloudflare Hyperdrive
+  - ORM: Drizzle ORM (queries) + Drizzle Kit (migrations)
+  - Files: Cloudflare R2 for blog images via s3mini
+  - Cache / rate limit: Workers KV
+  - Background jobs: Cloudflare Queues (async RAG indexing)
+  - AI / RAG: Cloudflare Workers AI — embeddings @cf/baai/bge-large-en-v1.5, chat @cf/meta/llama-3.1-8b-instruct
+  - Testing: Vitest + Cloudflare Workers Vitest Pool
+
+  Preferred layout:
+  - apps/web — Next.js frontend
+  - apps/api — Hono Worker API
+  - packages/types — shared Zod schemas
+  - packages/db — Drizzle schema/client (if/when split out)
+
+  Architecture constraints:
+  - Keep write path fast: enqueue RAG indexing; never block post create/update on embeddings
+  - Scope vector retrieval by postId (no cross-post leakage)
+  - Prefer Cloudflare-native bindings over extra vendors unless already chosen above
+  - Language for planning artifacts: Spanish OK for prose; keep capability/requirement IDs and code in English
+
+# Per-artifact rules (additive to schema guidance)
+rules:
+  proposal:
+    - Keep under ~500 words; focus on why/what, not implementation detail
+    - Always include a Non-goals style boundary in What Changes or Impact when scope could sprawl
+    - List capabilities in kebab-case that map 1:1 to specs/<name>/spec.md
+  specs:
+    - Specs describe observable behavior only — no library/framework names unless they are external contracts users depend on
+    - Every requirement MUST use SHALL/MUST and include at least one #### Scenario with WHEN/THEN
+    - Prefer separate capabilities over mega-specs (auth, posts, engagement, rag, infra)
+  design:
+    - Document Cloudflare bindings and the async RAG queue flow explicitly when relevant
+    - Call out Workers runtime constraints (nodejs_compat, hashing, Hyperdrive) in Decisions
+    - Resolve open questions that would change specs/tasks before leaving them open
+  tasks:
+    - "Use checkbox format '- [ ] X.Y ...' only (required for apply tracking)"
+    - "Order by dependency: monorepo/tooling → DB → auth → posts → engagement → RAG → polish"
+    - "Keep tasks small enough for one session; reference apps/packages paths when helpful"
+
+# Advisory guidance for apply / archive operations
+operations:
+  apply:
+    guidance:
+      - Follow tasks.md order; mark checkboxes done as you go
+      - Prefer shared Zod in packages/types for any new API payload
+      - Verify Workers-sensitive paths (auth hashing, Hyperdrive, Queues, Workers AI) with Vitest Workers pool when touching them
+      - Do not introduce OAuth, Vectorize, or non-Cloudflare AI providers unless a new change explicitly asks
+      - Keep commits out of apply unless the user asks to commit
+  archive:
+    guidance:
+      - Summarize what landed vs what was deferred before finishing
+      - Ensure delta specs merge cleanly into openspec/specs/ with Purpose sections intact

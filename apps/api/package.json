@@ -1,0 +1,30 @@
+{
+	"name": "@rag-blog/api",
+	"version": "0.0.1",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "wrangler dev",
+		"deploy": "wrangler deploy",
+		"typecheck": "tsc --noEmit",
+		"build": "tsc --noEmit",
+		"test": "vitest run",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"@rag-blog/db": "workspace:*",
+		"@rag-blog/types": "workspace:*",
+		"better-auth": "^1.3.7",
+		"drizzle-orm": "^0.45.2",
+		"hono": "^4.9.6",
+		"s3mini": "^0.9.5",
+		"zod": "^4.0.17"
+	},
+	"devDependencies": {
+		"@cloudflare/vitest-pool-workers": "^0.8.71",
+		"@cloudflare/workers-types": "^4.20250823.0",
+		"typescript": "^5.9.2",
+		"vitest": "~3.2.4",
+		"wrangler": "^4.33.1"
+	}
+}

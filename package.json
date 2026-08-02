@@ -1,0 +1,29 @@
+{
+	"name": "rag-blog-app",
+	"private": true,
+	"packageManager": "pnpm@10.33.0",
+	"scripts": {
+		"dev": "pnpm --parallel --filter @rag-blog/web --filter @rag-blog/api dev",
+		"dev:web": "pnpm --filter @rag-blog/web dev",
+		"dev:api": "pnpm --filter @rag-blog/api dev",
+		"build": "pnpm -r --filter @rag-blog/types --filter @rag-blog/db --filter @rag-blog/api --filter @rag-blog/web build",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"test": "pnpm --filter @rag-blog/api test",
+		"db:generate": "pnpm --filter @rag-blog/db generate",
+		"db:migrate": "pnpm --filter @rag-blog/db migrate",
+		"typecheck": "pnpm -r typecheck"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.4",
+		"typescript": "^5.9.2"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild",
+			"sharp",
+			"workerd"
+		]
+	}
+}

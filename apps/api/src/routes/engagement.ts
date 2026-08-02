@@ -31,7 +31,7 @@ engagementRoutes.post("/:postId/like", requireAuth, async (c) => {
 
 	if (!existing) {
 		await db.insert(likes).values({
-			id: newId("like"),
+			id: newId(),
 			postId,
 			userId: authUser.id,
 		});
@@ -70,7 +70,7 @@ engagementRoutes.post("/:postId/share", async (c) => {
 	const authUser = c.get("user");
 	const db = dbFromEnv(c.env);
 	await db.insert(shares).values({
-		id: newId("share"),
+		id: newId(),
 		postId,
 		userId: authUser?.id ?? null,
 	});
@@ -125,7 +125,7 @@ engagementRoutes.post("/:postId/comments", requireAuth, async (c) => {
 	}
 
 	const db = dbFromEnv(c.env);
-	const id = newId("comment");
+	const id = newId();
 	const createdAt = new Date();
 	await db.insert(comments).values({
 		id,

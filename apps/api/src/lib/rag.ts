@@ -38,7 +38,7 @@ export async function indexPost(env: Env, db: Database, postId: string): Promise
 		const embeddings = await embedTexts(env.AI, chunks);
 		await db.insert(postChunks).values(
 			chunks.map((content, chunkIndex) => ({
-				id: newId("chunk"),
+				id: newId(),
 				postId,
 				chunkIndex,
 				content,

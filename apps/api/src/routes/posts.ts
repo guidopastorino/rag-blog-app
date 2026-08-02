@@ -90,7 +90,7 @@ postsRoutes.post("/", requireAuth, async (c) => {
 	if (!authUser) return c.json({ error: "Unauthorized" }, 401);
 
 	const db = dbFromEnv(c.env);
-	const id = newId("post");
+	const id = newId();
 	const now = new Date();
 
 	await db.insert(posts).values({

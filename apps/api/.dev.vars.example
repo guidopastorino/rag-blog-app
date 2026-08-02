@@ -1,3 +1,4 @@
 BETTER_AUTH_SECRET=replace-with-a-long-random-secret-at-least-32-chars
 DATABASE_URL=postgres://user:pass@localhost:5432/rag_blog
-R2_PUBLIC_BASE_URL=
+# Optional — only when R2 is enabled:
+# R2_PUBLIC_BASE_URL=

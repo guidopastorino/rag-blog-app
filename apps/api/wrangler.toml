@@ -5,7 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 APP_URL = "http://localhost:3000"
-API_URL = "http://localhost:8787"
+API_URL = "https://rag-blog-api.guidopasto05.workers.dev"
 WEB_ORIGIN = "http://localhost:3000"
 
 # Placeholder bindings — replace IDs after provisioning Cloudflare resources.
@@ -14,10 +14,11 @@ binding = "HYPERDRIVE"
 id = "523981c7e71c48cda689a56cf3fb783a"
 localConnectionString = "postgres://user:pass@localhost:5432/rag_blog"
 
-[[r2_buckets]]
-binding = "BLOG_IMAGES"
-bucket_name = "rag-blog-images"
-preview_bucket_name = "rag-blog-images-preview"
+# R2 disabled for now (enable in Cloudflare Dashboard + uncomment when ready):
+# [[r2_buckets]]
+# binding = "BLOG_IMAGES"
+# bucket_name = "rag-blog-images"
+# preview_bucket_name = "rag-blog-images-preview"
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"

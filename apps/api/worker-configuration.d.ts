@@ -1,6 +1,7 @@
 interface Env {
 	HYPERDRIVE: Hyperdrive;
-	BLOG_IMAGES: R2Bucket;
+	/** Optional — only present when R2 binding is enabled in wrangler.toml */
+	BLOG_IMAGES?: R2Bucket;
 	RATE_LIMIT: KVNamespace;
 	RAG_INDEX_QUEUE: Queue;
 	AI: Ai;

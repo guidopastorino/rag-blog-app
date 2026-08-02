@@ -9,6 +9,11 @@ const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/g
 export const imagesRoutes = new Hono<{ Bindings: Env; Variables: AppVariables }>();
 
 imagesRoutes.post("/upload", requireAuth, async (c) => {
+	const s3 = createR2S3Client(c.env);
+	if (!s3 && !c.env.BLOG_IMAGES) {
+		return c.json({ error: "Image uploads are disabled (R2 not configured)" }, 503);
+	}
+
 	const form = await c.req.parseBody();
 	const file = form.file;
 	if (!file || typeof file === "string") {
@@ -23,10 +28,9 @@ imagesRoutes.post("/upload", requireAuth, async (c) => {
 	const key = `posts/${newId()}.${ext}`;
 	const bytes = new Uint8Array(await file.arrayBuffer());
 
-	const s3 = createR2S3Client(c.env);
 	if (s3) {
 		await s3.putObject(key, bytes, file.type);
-	} else {
+	} else if (c.env.BLOG_IMAGES) {
 		await c.env.BLOG_IMAGES.put(key, bytes, {
 			httpMetadata: { contentType: file.type },
 		});

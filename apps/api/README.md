@@ -8,7 +8,7 @@ Hono API on Cloudflare Workers (`nodejs_compat`).
 cp .dev.vars.example .dev.vars
 ```
 
-Fill `BETTER_AUTH_SECRET`, `DATABASE_URL`, and optionally `R2_PUBLIC_BASE_URL`.
+Fill `BETTER_AUTH_SECRET` and optionally `DATABASE_URL` (local). R2 vars are optional — image uploads are disabled until R2 is enabled.
 
 ## Cloudflare setup
 
@@ -21,18 +21,20 @@ pnpm --filter @rag-blog/api exec wrangler whoami
 
 Run these from the monorepo root (or `cd apps/api` and drop the filter). Paste any printed IDs into `wrangler.toml`.
 
-### 1. Enable R2 in the dashboard first
+### 1. R2 (optional — skipped for now)
 
-Dashboard → **R2 Object Storage** → accept terms / enable (may require a payment method). Then:
+Image uploads return `503` until R2 is enabled. When you want them:
+
+1. Enable R2 in the dashboard (may require a payment method)
+2. Uncomment `[[r2_buckets]]` in `wrangler.toml`
+3. Create buckets:
 
 ```bash
 pnpm --filter @rag-blog/api exec wrangler r2 bucket create rag-blog-images
 pnpm --filter @rag-blog/api exec wrangler r2 bucket create rag-blog-images-preview
 ```
 
-Optional public URL: R2 → bucket → Settings → Public access → copy `https://pub-….r2.dev` into `.dev.vars` as `R2_PUBLIC_BASE_URL`.
-
-Bucket names already match `wrangler.toml` (`BLOG_IMAGES`).
+4. Optional: set `R2_PUBLIC_BASE_URL` in `.dev.vars` from the bucket public URL.
 
 ### 2. KV (rate limit)
 

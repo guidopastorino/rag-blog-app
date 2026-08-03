@@ -5,7 +5,7 @@ import { chunkText } from "./chunk";
 import { newId } from "./ids";
 
 const EMBED_MODEL = "@cf/baai/bge-large-en-v1.5";
-const CHAT_MODEL = "@cf/meta/llama-3.1-8b-instruct";
+const CHAT_MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const SIMILARITY_THRESHOLD = 0.3;
 
 export async function embedTexts(ai: Ai, texts: string[]): Promise<number[][]> {

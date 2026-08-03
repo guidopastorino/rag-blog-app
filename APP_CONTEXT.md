@@ -13,5 +13,5 @@ Stack:
 - Archivos: Cloudflare R2 (Imágenes de los blogs con s3mini).
 - Caché / Rate Limit: Workers KV.
 - Tareas en segundo plano: Cloudflare Queues (Para procesar el RAG de forma asíncrona).
-- Motor de IA (RAG): Cloudflare Workers AI (@cf/baai/bge-large-en-v1.5 y @cf/meta/llama-3.1-8b-instruct).
+- Motor de IA (RAG): Cloudflare Workers AI (@cf/baai/bge-large-en-v1.5 y @cf/meta/llama-3.1-8b-instruct-fast).
 - Testing: Vitest + Cloudflare Workers Vitest Pool.

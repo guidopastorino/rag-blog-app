@@ -3,7 +3,7 @@
 import type { AskPostAnswer, Comment, Post } from "@rag-blog/types";
 import { askPostQuestionSchema, createCommentSchema } from "@rag-blog/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,12 +14,14 @@ import { authClient } from "@/lib/auth-client";
 export default function PostDetailPage() {
 	const params = useParams<{ id: string }>();
 	const postId = params.id;
+	const router = useRouter();
 	const qc = useQueryClient();
 	const { data: session } = authClient.useSession();
 	const [comment, setComment] = useState("");
 	const [question, setQuestion] = useState("");
 	const [answer, setAnswer] = useState<AskPostAnswer | null>(null);
 	const [askError, setAskError] = useState<string | null>(null);
+	const [deleteError, setDeleteError] = useState<string | null>(null);
 
 	const postQuery = useQuery({
 		queryKey: ["post", postId],
@@ -76,7 +78,17 @@ export default function PostDetailPage() {
 		onError: (err) => setAskError(err instanceof Error ? err.message : "Ask failed"),
 	});
 
+	const deleteMutation = useMutation({
+		mutationFn: () => apiFetch<{ ok: boolean }>(`/api/posts/${postId}`, { method: "DELETE" }),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ["posts"] });
+			router.push("/");
+		},
+		onError: (err) => setDeleteError(err instanceof Error ? err.message : "Delete failed"),
+	});
+
 	const post = postQuery.data?.post;
+	const isOwner = Boolean(session?.user?.id && post?.authorId === session.user.id);
 
 	if (postQuery.isLoading) return <p className="text-[var(--muted)]">Loading…</p>;
 	if (postQuery.error || !post) {
@@ -116,7 +128,23 @@ export default function PostDetailPage() {
 					>
 						Share ({post.shareCount ?? 0})
 					</Button>
+					{isOwner && (
+						<Button
+							size="sm"
+							variant="outline"
+							className="border-red-300 text-red-700 hover:bg-red-50"
+							disabled={deleteMutation.isPending}
+							onClick={() => {
+								if (!window.confirm("Delete this post? This cannot be undone.")) return;
+								setDeleteError(null);
+								deleteMutation.mutate();
+							}}
+						>
+							{deleteMutation.isPending ? "Deleting…" : "Delete"}
+						</Button>
+					)}
 				</div>
+				{deleteError && <p className="text-sm text-red-700">{deleteError}</p>}
 			</header>
 
 			<div className="whitespace-pre-wrap leading-7 text-[var(--foreground)]">{post.body}</div>

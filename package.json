@@ -6,6 +6,8 @@
 		"dev": "pnpm --parallel --filter @rag-blog/web --filter @rag-blog/api dev",
 		"dev:web": "pnpm --filter @rag-blog/web dev",
 		"dev:api": "pnpm --filter @rag-blog/api dev",
+		"deploy:web": "pnpm --filter @rag-blog/web run deploy",
+		"deploy:api": "pnpm --filter @rag-blog/api run deploy",
 		"build": "pnpm -r --filter @rag-blog/types --filter @rag-blog/db --filter @rag-blog/api --filter @rag-blog/web build",
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",

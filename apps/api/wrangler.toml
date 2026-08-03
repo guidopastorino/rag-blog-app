@@ -4,9 +4,9 @@ compatibility_date = "2025-08-01"
 compatibility_flags = ["nodejs_compat"]
 
 [vars]
-APP_URL = "http://localhost:3000"
+APP_URL = "https://rag-blog-web.guidopasto05.workers.dev"
 API_URL = "https://rag-blog-api.guidopasto05.workers.dev"
-WEB_ORIGIN = "http://localhost:3000"
+WEB_ORIGIN = "https://rag-blog-web.guidopasto05.workers.dev"
 
 # Placeholder bindings — replace IDs after provisioning Cloudflare resources.
 [[hyperdrive]]

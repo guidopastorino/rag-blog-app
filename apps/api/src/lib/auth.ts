@@ -20,14 +20,22 @@ export function createAuth(env: Env) {
 			},
 		}),
 		secret: env.BETTER_AUTH_SECRET,
-		baseURL: env.API_URL,
+		// Public origin the browser uses (web app). `/api/*` is proxied same-origin so cookies stick.
+		baseURL: env.APP_URL,
 		basePath: "/api/auth",
-		trustedOrigins: [env.WEB_ORIGIN],
+		trustedOrigins: [env.WEB_ORIGIN, env.APP_URL],
 		emailAndPassword: {
 			enabled: true,
 			password: {
 				hash: hashPassword,
 				verify: verifyPassword,
+			},
+		},
+		advanced: {
+			defaultCookieAttributes: {
+				sameSite: "lax",
+				path: "/",
+				secure: env.APP_URL.startsWith("https://"),
 			},
 		},
 		plugins: [

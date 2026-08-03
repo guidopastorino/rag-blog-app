@@ -1,4 +1,10 @@
 BETTER_AUTH_SECRET=replace-with-a-long-random-secret-at-least-32-chars
 DATABASE_URL=postgres://user:pass@localhost:5432/rag_blog
+
+# Override wrangler.toml [vars] for local Next proxy + cookies
+APP_URL=http://localhost:3000
+WEB_ORIGIN=http://localhost:3000
+API_URL=http://localhost:8787
+
 # Optional — only when R2 is enabled:
 # R2_PUBLIC_BASE_URL=

@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# `@rag-blog/web`
 
-## Getting Started
+Next.js frontend (OpenNext → Cloudflare Workers).
 
-First, run the development server:
+## Auth cookies / API proxy
+
+The browser only talks to this origin. Next rewrites `/api/*` to the API Worker (`API_BACKEND_URL`), so Better Auth session cookies stay same-site.
+
+- Local: `.env.development` → `http://localhost:8787`
+- Prod build: `.env.production` → Worker URL
+
+## Scripts
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm --filter @rag-blog/web dev       # next dev + proxy
+pnpm --filter @rag-blog/web preview   # OpenNext local Workers runtime
+pnpm --filter @rag-blog/web run deploy
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Or from repo root: `pnpm deploy:web`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## After deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Prod URLs (current):
 
-## Learn More
+- Web: https://rag-blog-web.guidopasto05.workers.dev
+- API: https://rag-blog-api.guidopasto05.workers.dev
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+After changing the web URL, update API `APP_URL` / `WEB_ORIGIN` in `apps/api/wrangler.toml` and run `pnpm deploy:api`.

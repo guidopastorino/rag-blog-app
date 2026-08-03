@@ -1,7 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8787";
-
+/** Same-origin calls — Next proxies `/api/*` to the Worker so auth cookies stay on this host. */
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
-	const res = await fetch(`${API_URL}${path}`, {
+	const res = await fetch(path, {
 		...init,
 		credentials: "include",
 		headers: {
@@ -17,5 +16,3 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
 
 	return res.json() as Promise<T>;
 }
-
-export { API_URL };
